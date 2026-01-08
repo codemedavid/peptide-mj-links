@@ -116,6 +116,8 @@ function App() {
               href={link.href}
               className="link-btn"
               id={link.id}
+              target="_blank"
+              rel="noopener noreferrer"
               style={{ animationDelay: `${0.1 * (index + 1)}s` }}
               onClick={handleRipple}
             >
