@@ -74,16 +74,29 @@ const Home = () => {
 
       {/* Links Section */}
       <main className="links-container">
-        {links.map((link, index) => (
-          <LinkButton
-            key={index}
-            text={link.text}
-            href={link.href}
-            icon={link.icon}
-            delay={0.1 + (index * 0.05)}
-            variant={link.variant}
-          />
-        ))}
+        {links.map((link, index) => {
+          if (link.variant === 'header') {
+            return (
+              <h2
+                key={index}
+                className="link-section-header animate-fade-in"
+                style={{ animationDelay: `${0.1 + (index * 0.05)}s` }}
+              >
+                {link.text}
+              </h2>
+            );
+          }
+          return (
+            <LinkButton
+              key={index}
+              text={link.text}
+              href={link.href}
+              icon={link.icon}
+              delay={0.1 + (index * 0.05)}
+              variant={link.variant}
+            />
+          );
+        })}
       </main>
 
       <Footer />

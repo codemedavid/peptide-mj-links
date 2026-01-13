@@ -151,24 +151,42 @@
   z-index: 10;
   gap: 0.25rem;
 }
+
+.link-section-header {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  margin: 1.5rem 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: 100%;
+  max-width: 32rem;
+  /* Match link button width if possible, or just text-align center */
+  text-align: center;
+  opacity: 0.8;
+}
+
 /* Background Line Heart */
 .bg-heart-decor {
-    position: absolute;
-    width: 600px; /* Large enough to be a subtle background */
-    height: auto;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-10deg);
-    opacity: 0.15; /* Subtle */
-    pointer-events: none;
-    z-index: 0;
-    mix-blend-mode: overlay;
+  position: absolute;
+  width: 600px;
+  /* Large enough to be a subtle background */
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  opacity: 0.15;
+  /* Subtle */
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: overlay;
 }
 
 .brand-separator {
-    width: 200px;
-    height: auto;
-    margin: 1rem auto;
-    display: block;
-    opacity: 0.8;
+  width: 200px;
+  height: auto;
+  margin: 1rem auto;
+  display: block;
+  opacity: 0.8;
 }
