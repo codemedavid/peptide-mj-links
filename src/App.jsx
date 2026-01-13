@@ -9,56 +9,33 @@ import './App.css';
 
 // Public Home Component
 const Home = () => {
-  // Using static links for Gellies Peppies rebrand effectively immediately
-  const links = [
-    {
-      text: 'Join Our WhatsApp Community',
-      href: 'https://chat.whatsapp.com/Iy46aF2sL44FhFC5a2hqkv',
-      icon: '💬',
-      variant: 'primary'
-    },
-    {
-      text: 'Contact Us on WhatsApp',
-      href: 'https://wa.me/639178520660',
-      icon: '📲',
-      variant: 'primary'
-    },
-    {
-      text: 'Instagram — Gellies Peppies',
-      href: 'https://www.instagram.com/gellies.peppies08',
-      icon: '📸',
-      variant: 'social'
-    },
-    {
-      text: 'Facebook — Gellies Peppies',
-      href: 'https://www.facebook.com/share/1EsjenZVrK/?mibextid=wwXIfr',
-      icon: '📘',
-      variant: 'social'
-    },
-    {
-      text: 'Telegram — Direct Chat',
-      href: 'https://t.me/angie587',
-      icon: '📨',
-      variant: 'social'
-    },
-    {
-      text: 'TikTok — Gellies Peppies',
-      href: 'https://www.tiktok.com/@gellies.peppiesforyou?_r=1&_t=ZS-931dUxI42t7',
-      icon: '🎶',
-      variant: 'social'
-    }
-  ];
-
-  /* 
-  // Supabase fetch commented out for static rebrand deploy
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchLinks();
   }, []);
-  ...
-  */
+
+  const fetchLinks = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('links')
+        .select('*')
+        .order('order', { ascending: true });
+
+      if (error) throw error;
+      setLinks(data || []);
+    } catch (error) {
+      console.error('Error fetching links:', error);
+      // Fallback if DB fails
+      setLinks([
+        { text: 'Join Our WhatsApp Community', href: 'https://chat.whatsapp.com/Iy46aF2sL44FhFC5a2hqkv', icon: '💬', variant: 'primary' },
+        { text: 'Contact Us on WhatsApp', href: 'https://wa.me/639178520660', icon: '📲', variant: 'primary' }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="app-container">

@@ -1,44 +1,38 @@
--- Create table if it doesn't exist
-create table if not exists links (
+-- 1. Reset Schema (Drop table to ensure clean state for new configuration)
+drop table if exists links cascade;
+
+-- 2. Create Table
+create table links (
   id uuid default gen_random_uuid() primary key,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   text text not null,
   href text not null,
   icon text,
+  variant text default 'primary', -- Added variant column
   "order" integer default 0
 );
 
--- Enable RLS
+-- 3. Enable RLS
 alter table links enable row level security;
 
--- Policies (Drop and recreate to avoid "already exists" errors)
-
--- 1. READ: Public (Anon) can read
-drop policy if exists "Public links are viewable by everyone" on links;
+-- 4. Policies
+-- Allow public read access
 create policy "Public links are viewable by everyone"
   on links for select
   to anon
   using (true);
 
--- 2. WRITE: Public (Anon) can write (Since we are using hardcoded client-side auth)
--- WARNING: This effectively makes the table public writable for anyone who knows the API
-drop policy if exists "Authenticated users can manage links" on links;
-drop policy if exists "Public can manage links" on links;
-
+-- Allow public write access (Since we are using hardcoded client-side auth for this simple app)
 create policy "Public can manage links"
   on links for all
   to anon
   using (true);
 
--- SEED DATA
-do $$
-begin
-  if not exists (select 1 from links) then
-    insert into links (text, href, icon, "order") values
-    ('Place Your Order', 'https://tiny.cc/paureorder', '🛒', 1),
-    ('Tirzepatide Overview (Full Product & Education Guide)', 'https://www.canva.com/design/DAG-M5mcJYU/LlFfBr5OHdBKYF1_mzoMoA/view?utm_content=DAG-M5mcJYU&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h71df313386', '📘', 2),
-    ('Welcome Guide (Start Here)', 'https://tiny.cc/paureguide', '📖', 3),
-    ('Contact PAURE', 'https://tiny.cc/paurecontactus', '💬', 4),
-    ('Facebook — PAURE Wellness', 'https://www.facebook.com/paurewellness', '📘', 5);
-  end if;
-end $$;
+-- 5. Seed Data
+insert into links (text, href, icon, variant, "order") values
+('Join Our WhatsApp Community', 'https://chat.whatsapp.com/Iy46aF2sL44FhFC5a2hqkv', '💬', 'primary', 1),
+('Contact Us on WhatsApp', 'https://wa.me/639178520660', '📲', 'primary', 2),
+('Instagram — Gellies Peppies', 'https://www.instagram.com/gellies.peppies08', '📸', 'social', 3),
+('Facebook — Gellies Peppies', 'https://www.facebook.com/share/1EsjenZVrK/?mibextid=wwXIfr', '📘', 'social', 4),
+('Telegram — Direct Chat', 'https://t.me/angie587', '📨', 'social', 5),
+('TikTok — Gellies Peppies', 'https://www.tiktok.com/@gellies.peppiesforyou?_r=1&_t=ZS-931dUxI42t7', '🎶', 'social', 6);

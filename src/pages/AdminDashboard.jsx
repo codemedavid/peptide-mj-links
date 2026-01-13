@@ -92,7 +92,7 @@ const AdminDashboard = () => {
             <div className="bg-decor bg-orb-3"></div>
 
             <header className="admin-header animate-fade-in">
-                <h1 className="admin-title">Admin Dashboard</h1>
+                <h1 className="admin-title">Gellies Peppies Admin</h1>
                 <button
                     onClick={handleLogout}
                     className="logout-button"
