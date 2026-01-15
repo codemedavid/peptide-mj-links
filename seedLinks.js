@@ -38,7 +38,7 @@ const newLinks = [
     },
     {
         text: 'Order & Inquiries (WhatsApp)',
-        subtext: '09068488131',
+        subtext: null,
         href: 'https://wa.me/639068488131',
         icon: '💬',
         variant: 'primary',
@@ -46,7 +46,7 @@ const newLinks = [
     },
     {
         text: 'Message Us (Viber)',
-        subtext: '09068488131',
+        subtext: null,
         href: 'viber://contact?number=%2B639068488131',
         icon: '📞',
         variant: 'primary',

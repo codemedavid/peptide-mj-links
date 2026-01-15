@@ -37,8 +37,8 @@ const Home = () => {
       setLinks([
         { text: 'Primary Actions', variant: 'header' },
         { text: 'Price List', href: 'https://drive.google.com/file/d/1Bc8Z3P4xNRGs3wC58aOjSNRqZppYKA4o/view?usp=drivesdk', icon: '💰', variant: 'primary' },
-        { text: 'Order & Inquiries (WhatsApp)', subtext: '09068488131', href: 'https://wa.me/639068488131', icon: '💬', variant: 'primary' },
-        { text: 'Message Us (Viber)', subtext: '09068488131', href: 'viber://contact?number=%2B639068488131', icon: '📞', variant: 'primary' },
+        { text: 'Order & Inquiries (WhatsApp)', href: 'https://wa.me/639068488131', icon: '💬', variant: 'primary' },
+        { text: 'Message Us (Viber)', href: 'viber://contact?number=%2B639068488131', icon: '📞', variant: 'primary' },
 
         { text: 'Community', variant: 'header' },
         { text: 'Join Our Community Group', href: 'https://m.me/cm/AbbU9aNR-_LdXPbb/?send_source=cm%3Acopy_invite_link', icon: '👥', variant: 'secondary' },
