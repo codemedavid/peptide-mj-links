@@ -1,34 +1,29 @@
 :root {
-  /* Color Palette - Gellies Peppies Theme */
-  --color-primary: #B388FF;
-  /* Lighter Violet */
-  --color-primary-dark: #7C4DFF;
-  /* Slightly Darker Violet (but lighter than before) */
-  --color-secondary: #E1BEE7;
-  /* Soft Lavender */
-  --color-secondary-dark: #BA68C8;
-  /* Medium Orchid */
-  --color-accent: #D1C4E9;
-  /* Pale Violet */
+  /* Color Palette - Peptide by MJ Theme */
+  --color-primary: #81D4FA; /* Light Blue */
+  --color-primary-dark: #29B6F6; /* Blue */
+  --color-secondary: #F48FB1; /* Pink */
+  --color-secondary-dark: #EC407A; /* Dark Pink */
+  
+  /* Gradient Colors for background */
+  --grad-start: #E3F2FD; /* Blue 50 */
+  --grad-middle: #FCE4EC; /* Pink 50 */
+  --grad-end: #F3E5F5; /* Purple 50 */
 
-  --color-bg-start: #E6E6FA;
-  /* Lavender */
-  --color-bg-end: #D8BFD8;
-  /* Thistle (Violet-ish) */
-
-  --color-text: #2D2D2D;
-  --color-text-light: #5A5A5A;
+  --color-text: #263238; /* Deep Blue Grey */
+  --color-text-light: #546E7A; /* Blue Grey */
   --color-white: #FFFFFF;
 
   /* Gradients */
-  --bg-gradient: linear-gradient(180deg, #F3E5F5 0%, #E1BEE7 100%);
-  /* Lighter Violet Gradient */
-  --button-primary-gradient: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  /* Blue -> Blush Pink -> Violet */
+  --bg-gradient: linear-gradient(180deg, var(--grad-start) 0%, var(--grad-middle) 50%, var(--grad-end) 100%);
+  
+  --button-primary-gradient: linear-gradient(90deg, #4FC3F7 0%, #F06292 100%); /* Blue to Pink */
+  --button-hover-glow: 0 4px 15px rgba(240, 98, 146, 0.4);
 
   /* Typography */
-  --font-heading: 'inter', sans-serif;
-  /* Clean, modern */
-  --font-body: 'inter', sans-serif;
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
 }
 
 * {

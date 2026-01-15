@@ -16,35 +16,37 @@
     overflow: hidden;
 }
 
-/* Primary Variant (Violet Filled) */
+/* Primary Variant */
 .link-button--primary {
     background: var(--button-primary-gradient);
     color: var(--color-white);
     border: none;
-    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+    /* Blue shadow default */
 }
 
 .link-button--primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
-    filter: brightness(1.1);
+    box-shadow: var(--button-hover-glow);
+    filter: brightness(1.05);
 }
 
-/* Social/Secondary Variant (Violet Outline) */
-.link-button--social {
-    background: rgba(255, 255, 255, 0.6);
-    border: 2px solid var(--color-primary);
-    /* Changed from secondary-dark (pink) to primary (violet) */
+/* Secondary Variant (Gradient Outline) */
+.link-button--secondary {
+    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)) padding-box,
+        var(--button-primary-gradient) border-box;
+    border: 2px solid transparent;
     color: var(--color-text);
 }
 
-.link-button--social:hover {
-    background: var(--color-primary);
+.link-button--secondary:hover {
+    /* Fill on hover */
+    background: var(--button-primary-gradient) padding-box,
+        var(--button-primary-gradient) border-box;
     color: var(--color-white);
-    border-color: var(--color-primary);
+    border-color: transparent;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(179, 136, 255, 0.4);
-    /* Violet shadow */
+    box-shadow: var(--button-hover-glow);
 }
 
 .link-button-icon {
@@ -54,7 +56,20 @@
     justify-content: center;
 }
 
+.link-button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.25;
+}
+
 .link-button-text {
     letter-spacing: 0.02em;
     font-size: 1.05rem;
+}
+
+.link-button-subtext {
+    font-size: 0.85rem;
+    font-weight: 400;
+    opacity: 0.9;
 }

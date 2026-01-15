@@ -5,10 +5,10 @@ const Footer = () => {
     return (
         <footer className="footer animate-fade-in delay-300">
             <p className="footer-tagline">
-                Science-backed peptides • Recovery • Performance • Longevity
+                Trusted peptides • Transparent pricing • Growing community
             </p>
             <p className="footer-copyright">
-                © {new Date().getFullYear()} Gellies Peppies
+                © {new Date().getFullYear()} Peptide by MJ
             </p>
         </footer>
     );

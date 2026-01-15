@@ -18,19 +18,34 @@ const Home = () => {
 
   const fetchLinks = async () => {
     try {
-      const { data, error } = await supabase
-        .from('links')
-        .select('*')
-        .order('order', { ascending: true });
-
       if (error) throw error;
-      setLinks(data || []);
+      if (data && data.length > 0) {
+        // Schema Check: Ensure 'subtext' column exists in fetched data (even if null)
+        // If undefined, it means the DB table hasn't been updated with the new column.
+        if (typeof data[0].subtext === 'undefined') {
+          console.warn("Detected old database schema (missing 'subtext'). Falling back to hardcoded configuration.");
+          throw new Error("Old Schema Detected");
+        }
+        setLinks(data);
+      } else {
+        // Fallback or Empty DB logic
+        throw new Error("No links in DB");
+      }
     } catch (error) {
-      console.error('Error fetching links:', error);
-      // Fallback if DB fails
+      console.log('Using default links configuration');
+      // Default Fallback Links based on Rebranding
       setLinks([
-        { text: 'Join Our WhatsApp Community', href: 'https://chat.whatsapp.com/Iy46aF2sL44FhFC5a2hqkv', icon: '💬', variant: 'primary' },
-        { text: 'Contact Us on WhatsApp', href: 'https://wa.me/639178520660', icon: '📲', variant: 'primary' }
+        { text: 'Primary Actions', variant: 'header' },
+        { text: 'Price List', href: 'https://drive.google.com/file/d/1Bc8Z3P4xNRGs3wC58aOjSNRqZppYKA4o/view?usp=drivesdk', icon: '💰', variant: 'primary' },
+        { text: 'Order & Inquiries (WhatsApp)', subtext: '09068488131', href: 'https://wa.me/639068488131', icon: '💬', variant: 'primary' },
+        { text: 'Message Us (Viber)', subtext: '09068488131', href: 'viber://contact?number=%2B639068488131', icon: '📞', variant: 'primary' },
+
+        { text: 'Community', variant: 'header' },
+        { text: 'Join Our Community Group', href: 'https://m.me/cm/AbbU9aNR-_LdXPbb/?send_source=cm%3Acopy_invite_link', icon: '👥', variant: 'secondary' },
+
+        { text: 'Follow & Connect', variant: 'header' },
+        { text: 'Facebook — Peptide MJ', href: 'https://www.facebook.com/share/1D13cuk9vB/', icon: '📘', variant: 'secondary' },
+        { text: 'TikTok — Peptide by MJ', href: 'https://www.tiktok.com/@peptidebymj?_r=1&_t=ZS-934EOKIDojl', icon: '🎵', variant: 'secondary' }
       ]);
     } finally {
       setLoading(false);
@@ -39,36 +54,31 @@ const Home = () => {
 
   return (
     <div className="app-container">
-      {/* Background Decor */}
-      <div className="bg-decor bg-orb-1"></div>
-      <div className="bg-decor bg-orb-2"></div>
-      <div className="bg-decor bg-orb-3"></div>
-
-      {/* Background Line Heart */}
-      <img src="/line-heart.svg" alt="" className="bg-heart-decor" />
+      {/* Background Decor - Simplified */}
+      {/* <div className="bg-decor bg-orb-1"></div> */}
 
       {/* Header Section */}
       <header className="header animate-fade-in">
         <div className="logo-container">
           <img
             src="/logo.png"
-            alt="Gellies Peppies Logo"
+            alt="Peptide by MJ Logo"
             className="logo-img"
           />
           <div className="logo-glow"></div>
         </div>
 
         <h1 className="brand-name">
-          Gellies Peppies
+          Peptide by MJ
         </h1>
         <p className="brand-tagline">
-          Peptides For You
+          Where quality meets affordability.
         </p>
 
-        <img src="/heart-line.svg" alt="Heart Line" className="brand-separator" />
+        <div className="brand-separator-line"></div>
 
         <p className="brand-description" style={{ maxWidth: '600px', margin: '0.5rem auto 0', lineHeight: '1.6', fontSize: '0.95rem', opacity: 0.9 }}>
-          Unlock your body's hidden potential with the purest peptides on the market. Don’t just age — evolve with targeted recovery and peak performance.
+          Premium peptides made accessible — trusted quality without the premium price.
         </p>
       </header>
 
@@ -90,6 +100,7 @@ const Home = () => {
             <LinkButton
               key={index}
               text={link.text}
+              subtext={link.subtext}
               href={link.href}
               icon={link.icon}
               delay={0.1 + (index * 0.05)}

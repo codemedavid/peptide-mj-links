@@ -7,8 +7,9 @@ import './AdminDashboard.css';
 const AdminDashboard = () => {
     const [links, setLinks] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [newLink, setNewLink] = useState({ text: '', href: '', icon: '' });
+    const [newLink, setNewLink] = useState({ text: '', subtext: '', href: '', icon: '', variant: 'primary' });
     const [isAdding, setIsAdding] = useState(false);
+    const [schemaError, setSchemaError] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,6 +34,12 @@ const AdminDashboard = () => {
                 .order('order', { ascending: true });
 
             if (error) throw error;
+
+            if (data && data.length > 0) {
+                if (typeof data[0].subtext === 'undefined') {
+                    setSchemaError(true);
+                }
+            }
             setLinks(data || []);
         } catch (error) {
             console.error('Error fetching links:', error);
@@ -63,15 +70,19 @@ const AdminDashboard = () => {
         try {
             const maxOrder = links.length > 0 ? Math.max(...links.map(l => l.order || 0)) : -1;
 
+            // Clean up empty strings to null if needed, or keep as is.
+            const payload = { ...newLink, order: maxOrder + 1 };
+            if (!payload.subtext) delete payload.subtext; // Optional
+
             const { data, error } = await supabase
                 .from('links')
-                .insert([{ ...newLink, order: maxOrder + 1 }])
+                .insert([payload])
                 .select();
 
             if (error) throw error;
 
             setLinks([...links, data[0]]);
-            setNewLink({ text: '', href: '', icon: '' });
+            setNewLink({ text: '', subtext: '', href: '', icon: '', variant: 'primary' });
             setIsAdding(false);
         } catch (error) {
             alert('Error adding link: ' + error.message);
@@ -92,7 +103,7 @@ const AdminDashboard = () => {
             <div className="bg-decor bg-orb-3"></div>
 
             <header className="admin-header animate-fade-in">
-                <h1 className="admin-title">Gellies Peppies Admin</h1>
+                <h1 className="admin-title">Admin Dashboard</h1>
                 <button
                     onClick={handleLogout}
                     className="logout-button"
@@ -102,13 +113,30 @@ const AdminDashboard = () => {
                 </button>
             </header>
 
+            {schemaError && (
+                <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', border: '1px solid #fecaca' }}>
+                    <strong>⚠️ Database Connection Warning</strong>
+                    <p style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                        The database schema is outdated (missing 'subtext' column). The public website is currently using a <strong>fallback configuration</strong> so it looks correct to visitors, but this Admin Panel is showing the old database state.
+                    </p>
+                    <p style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>
+                        To fix this and make the links editable here, please run the SQL script provided in your Supabase SQL Editor.
+                    </p>
+                </div>
+            )}
+
             <div className="admin-links-list">
                 {links.map((link) => (
                     <div key={link.id} className="admin-link-card">
                         <div className="link-info">
-                            <span className="link-icon">{link.icon}</span>
+                            <span className="link-icon">{link.icon || '🔗'}</span>
                             <div className="link-details">
-                                <p className="link-text">{link.text}</p>
+                                <p className="link-text">{link.text}
+                                    <span style={{ fontSize: '0.7em', marginLeft: '8px', opacity: 0.7, background: '#eee', padding: '2px 6px', borderRadius: '4px' }}>
+                                        {link.variant || 'primary'}
+                                    </span>
+                                </p>
+                                {link.subtext && <p className="link-subtext" style={{ fontSize: '0.8rem', opacity: 0.8 }}>{link.subtext}</p>}
                                 <p className="link-url">{link.href}</p>
                             </div>
                         </div>
@@ -134,9 +162,20 @@ const AdminDashboard = () => {
                 <form onSubmit={handleAddLink} className="add-link-form">
                     <h3 className="form-title">Add New Link</h3>
                     <div className="form-group">
+                        {/* Variant Selector */}
+                        <select
+                            className="admin-input"
+                            value={newLink.variant}
+                            onChange={(e) => setNewLink({ ...newLink, variant: e.target.value })}
+                        >
+                            <option value="primary">Primary Button</option>
+                            <option value="secondary">Secondary Button</option>
+                            <option value="header">Section Header</option>
+                        </select>
+
                         <input
                             type="text"
-                            placeholder="Button Text (e.g. Shop Peptides)"
+                            placeholder="Button Text / Header Title"
                             className="admin-input"
                             value={newLink.text}
                             onChange={(e) => setNewLink({ ...newLink, text: e.target.value })}
@@ -144,8 +183,15 @@ const AdminDashboard = () => {
                             autoFocus
                         />
                         <input
-                            type="url"
-                            placeholder="URL (https://...)"
+                            type="text"
+                            placeholder="Subtext (Optional, e.g. Phone Number)"
+                            className="admin-input"
+                            value={newLink.subtext}
+                            onChange={(e) => setNewLink({ ...newLink, subtext: e.target.value })}
+                        />
+                        <input
+                            type="text"
+                            placeholder="URL (Use '#' for Headers)"
                             className="admin-input"
                             value={newLink.href}
                             onChange={(e) => setNewLink({ ...newLink, href: e.target.value })}

@@ -167,26 +167,21 @@
   opacity: 0.8;
 }
 
-/* Background Line Heart */
+
+/* Background Line Heart - Removed/Commented Out in JSX */
 .bg-heart-decor {
-  position: absolute;
-  width: 600px;
-  /* Large enough to be a subtle background */
-  height: auto;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-10deg);
-  opacity: 0.15;
-  /* Subtle */
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: overlay;
+  display: none;
+}
+
+.brand-separator-line {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  margin: 1.25rem auto;
+  border-radius: 2px;
+  opacity: 0.8;
 }
 
 .brand-separator {
-  width: 200px;
-  height: auto;
-  margin: 1rem auto;
-  display: block;
-  opacity: 0.8;
+  display: none;
 }

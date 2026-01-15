@@ -6,9 +6,10 @@ create table links (
   id uuid default gen_random_uuid() primary key,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   text text not null,
-  href text not null,
+  subtext text, -- Added subtext column
+  href text not null default '#', -- Default to # for headers
   icon text,
-  variant text default 'primary', -- Added variant column
+  variant text default 'primary',
   "order" integer default 0
 );
 
@@ -28,19 +29,19 @@ create policy "Public can manage links"
   to anon
   using (true);
 
--- 5. Seed Data with Headers
-insert into links (text, href, icon, variant, "order") values
+-- 5. Seed Data
+insert into links (text, subtext, href, icon, variant, "order") values
 -- Header: Primary Actions
-('⭐ Primary Actions (Top Priority)', '#', null, 'header', 1),
-('Join Our WhatsApp Community', 'https://chat.whatsapp.com/Iy46aF2sL44FhFC5a2hqkv', '💬', 'primary', 2),
-('Contact Us on WhatsApp', 'https://wa.me/639178520660', '📲', 'primary', 3),
+('⭐ Primary Actions (Top Section)', null, '#', null, 'header', 1),
+('Price List', null, 'https://drive.google.com/file/d/1Bc8Z3P4xNRGs3wC58aOjSNRqZppYKA4o/view?usp=drivesdk', '�', 'primary', 2),
+('Order & Inquiries (WhatsApp)', '09068488131', 'https://wa.me/639068488131', '💬', 'primary', 3),
+('Message Us (Viber)', '09068488131', 'viber://contact?number=%2B639068488131', '�', 'primary', 4),
 
--- Header: Connect & Follow
-('🌿 Connect & Follow', '#', null, 'header', 4),
-('Instagram — Gellies Peppies', 'https://www.instagram.com/gellies.peppies08', '📸', 'social', 5),
-('Facebook — Gellies Peppies', 'https://www.facebook.com/share/1EsjenZVrK/?mibextid=wwXIfr', '📘', 'social', 6),
-('Telegram — Direct Chat', 'https://t.me/angie587', '📨', 'social', 7),
+-- Header: Community
+('👥 Community', null, '#', null, 'header', 5),
+('Join Our Community Group', null, 'https://m.me/cm/AbbU9aNR-_LdXPbb/?send_source=cm%3Acopy_invite_link', '�', 'secondary', 6),
 
--- Header: Social (Optional)
-('🎵 Social', '#', null, 'header', 8),
-('TikTok — Gellies Peppies', 'https://www.tiktok.com/@gellies.peppiesforyou?_r=1&_t=ZS-931dUxI42t7', '🎶', 'social', 9);
+-- Header: Follow & Connect
+('🌐 Follow & Connect', null, '#', null, 'header', 7),
+('Facebook — Peptide MJ', null, 'https://www.facebook.com/share/1D13cuk9vB/', '�', 'secondary', 8),
+('TikTok — Peptide by MJ', null, 'https://www.tiktok.com/@peptidebymj?_r=1&_t=ZS-934EOKIDojl', '�', 'secondary', 9);
