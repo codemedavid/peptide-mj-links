@@ -109,6 +109,30 @@
     margin: 0;
 }
 
+.card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+.edit-button {
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.edit-button:hover {
+    background-color: rgba(195, 158, 160, 0.15);
+    color: var(--color-accent);
+}
+
 .delete-button {
     background: none;
     border: none;

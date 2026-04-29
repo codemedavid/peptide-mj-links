@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Plus, LogOut, Loader2 } from 'lucide-react';
+import { Trash2, Plus, LogOut, Loader2, Pencil, Check, X } from 'lucide-react';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -9,6 +9,8 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [newLink, setNewLink] = useState({ text: '', subtext: '', href: '', icon: '', variant: 'primary' });
     const [isAdding, setIsAdding] = useState(false);
+    const [editingId, setEditingId] = useState(null);
+    const [editForm, setEditForm] = useState({ text: '', subtext: '', href: '', icon: '', variant: 'primary' });
     const [schemaError, setSchemaError] = useState(false);
     const navigate = useNavigate();
 
@@ -62,6 +64,42 @@ const AdminDashboard = () => {
             setLinks(links.filter(link => link.id !== id));
         } catch (error) {
             alert('Error deleting link. Ensure database policies allow public writes.');
+        }
+    };
+
+    const handleStartEdit = (link) => {
+        setEditingId(link.id);
+        setEditForm({
+            text: link.text || '',
+            subtext: link.subtext || '',
+            href: link.href || '',
+            icon: link.icon || '',
+            variant: link.variant || 'primary',
+        });
+        setIsAdding(false);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingId(null);
+    };
+
+    const handleUpdateLink = async (e) => {
+        e.preventDefault();
+        try {
+            const payload = { ...editForm, subtext: editForm.subtext || null };
+
+            const { data, error } = await supabase
+                .from('links')
+                .update(payload)
+                .eq('id', editingId)
+                .select();
+
+            if (error) throw error;
+
+            setLinks(links.map(link => (link.id === editingId ? data[0] : link)));
+            setEditingId(null);
+        } catch (error) {
+            alert('Error updating link: ' + error.message);
         }
     };
 
@@ -127,28 +165,100 @@ const AdminDashboard = () => {
 
             <div className="admin-links-list">
                 {links.map((link) => (
-                    <div key={link.id} className="admin-link-card">
-                        <div className="link-info">
-                            <span className="link-icon">{link.icon || '🔗'}</span>
-                            <div className="link-details">
-                                <p className="link-text">{link.text}
-                                    <span style={{ fontSize: '0.7em', marginLeft: '8px', opacity: 0.7, background: '#eee', padding: '2px 6px', borderRadius: '4px' }}>
-                                        {link.variant || 'primary'}
-                                    </span>
-                                </p>
-                                {link.subtext && <p className="link-subtext" style={{ fontSize: '0.8rem', opacity: 0.8 }}>{link.subtext}</p>}
-                                <p className="link-url">{link.href}</p>
+                    editingId === link.id ? (
+                        <form key={link.id} onSubmit={handleUpdateLink} className="add-link-form" style={{ marginTop: 0 }}>
+                            <h3 className="form-title">Edit Link</h3>
+                            <div className="form-group">
+                                <select
+                                    className="admin-input"
+                                    value={editForm.variant}
+                                    onChange={(e) => setEditForm({ ...editForm, variant: e.target.value })}
+                                >
+                                    <option value="primary">Primary Button</option>
+                                    <option value="secondary">Secondary Button</option>
+                                    <option value="header">Section Header</option>
+                                </select>
+
+                                <input
+                                    type="text"
+                                    placeholder="Button Text / Header Title"
+                                    className="admin-input"
+                                    value={editForm.text}
+                                    onChange={(e) => setEditForm({ ...editForm, text: e.target.value })}
+                                    required
+                                    autoFocus
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Subtext (Optional, e.g. Phone Number)"
+                                    className="admin-input"
+                                    value={editForm.subtext}
+                                    onChange={(e) => setEditForm({ ...editForm, subtext: e.target.value })}
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="URL (Use '#' for Headers)"
+                                    className="admin-input"
+                                    value={editForm.href}
+                                    onChange={(e) => setEditForm({ ...editForm, href: e.target.value })}
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Icon Emoji (e.g. 🛒)"
+                                    className="admin-input"
+                                    value={editForm.icon}
+                                    onChange={(e) => setEditForm({ ...editForm, icon: e.target.value })}
+                                />
+                                <div className="form-actions">
+                                    <button type="submit" className="save-button">
+                                        <Check size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                                        Save Changes
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleCancelEdit}
+                                        className="cancel-button"
+                                    >
+                                        <X size={16} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    ) : (
+                        <div key={link.id} className="admin-link-card">
+                            <div className="link-info">
+                                <span className="link-icon">{link.icon || '🔗'}</span>
+                                <div className="link-details">
+                                    <p className="link-text">{link.text}
+                                        <span style={{ fontSize: '0.7em', marginLeft: '8px', opacity: 0.7, background: '#eee', padding: '2px 6px', borderRadius: '4px' }}>
+                                            {link.variant || 'primary'}
+                                        </span>
+                                    </p>
+                                    {link.subtext && <p className="link-subtext" style={{ fontSize: '0.8rem', opacity: 0.8 }}>{link.subtext}</p>}
+                                    <p className="link-url">{link.href}</p>
+                                </div>
+                            </div>
+
+                            <div className="card-actions">
+                                <button
+                                    onClick={() => handleStartEdit(link)}
+                                    className="edit-button"
+                                    title="Edit Link"
+                                >
+                                    <Pencil size={18} />
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(link.id)}
+                                    className="delete-button"
+                                    title="Delete Link"
+                                >
+                                    <Trash2 size={18} />
+                                </button>
                             </div>
                         </div>
-
-                        <button
-                            onClick={() => handleDelete(link.id)}
-                            className="delete-button"
-                            title="Delete Link"
-                        >
-                            <Trash2 size={18} />
-                        </button>
-                    </div>
+                    )
                 ))}
 
                 {links.length === 0 && !isAdding && (
