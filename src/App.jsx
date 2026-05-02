@@ -1,57 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { supabase } from './lib/supabase';
 import LinkButton from './components/LinkButton';
 import Footer from './components/Footer';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import './App.css';
 
+const LINKS = [
+  { text: 'Primary Actions', variant: 'header' },
+  { text: 'Price List', href: 'https://drive.google.com/file/d/1xKvgRg0gAWNvkH8JMhuL6zvXrgq6V4Li/view?usp=drivesdk', icon: '💰', variant: 'primary' },
+  { text: 'Order & Inquiries (WhatsApp)', href: 'https://wa.me/639068488131', icon: '💬', variant: 'primary' },
+  { text: 'Message Us (Viber)', href: 'viber://contact?number=%2B639068488131', icon: '📞', variant: 'primary' },
+
+  { text: 'Community', variant: 'header' },
+  { text: 'Join Our Community Group', href: 'https://m.me/cm/AbbU9aNR-_LdXPbb/?send_source=cm%3Acopy_invite_link', icon: '👥', variant: 'secondary' },
+
+  { text: 'Follow & Connect', variant: 'header' },
+  { text: 'Facebook — Pepps Mj', href: 'https://www.facebook.com/share/1Ay9hE98h5/', icon: '📘', variant: 'secondary' },
+  { text: 'TikTok — PeppyByMj', href: 'https://www.tiktok.com/@peppybymj?_r=1&_t=ZS-961aCxGmubI', icon: '🎵', variant: 'secondary' },
+  { text: 'Shopee Store — PeppyByMj', href: 'https://ph.shp.ee/4bQDtnfa', icon: '🛍️', variant: 'secondary' }
+];
+
 // Public Home Component
 const Home = () => {
-  const [links, setLinks] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchLinks();
-  }, []);
-
-  const fetchLinks = async () => {
-    try {
-      if (error) throw error;
-      if (data && data.length > 0) {
-        // Schema Check: Ensure 'subtext' column exists in fetched data (even if null)
-        // If undefined, it means the DB table hasn't been updated with the new column.
-        if (typeof data[0].subtext === 'undefined') {
-          console.warn("Detected old database schema (missing 'subtext'). Falling back to hardcoded configuration.");
-          throw new Error("Old Schema Detected");
-        }
-        setLinks(data);
-      } else {
-        // Fallback or Empty DB logic
-        throw new Error("No links in DB");
-      }
-    } catch (error) {
-      console.log('Using default links configuration');
-      // Default Fallback Links based on Rebranding
-      setLinks([
-        { text: 'Primary Actions', variant: 'header' },
-        { text: 'Price List', href: 'https://drive.google.com/file/d/1Bc8Z3P4xNRGs3wC58aOjSNRqZppYKA4o/view?usp=drivesdk', icon: '💰', variant: 'primary' },
-        { text: 'Order & Inquiries (WhatsApp)', href: 'https://wa.me/639068488131', icon: '💬', variant: 'primary' },
-        { text: 'Message Us (Viber)', href: 'viber://contact?number=%2B639068488131', icon: '📞', variant: 'primary' },
-
-        { text: 'Community', variant: 'header' },
-        { text: 'Join Our Community Group', href: 'https://m.me/cm/AbbU9aNR-_LdXPbb/?send_source=cm%3Acopy_invite_link', icon: '👥', variant: 'secondary' },
-
-        { text: 'Follow & Connect', variant: 'header' },
-        { text: 'Facebook — Peptide MJ', href: 'https://www.facebook.com/share/1D13cuk9vB/', icon: '📘', variant: 'secondary' },
-        { text: 'TikTok — Peptide by MJ', href: 'https://www.tiktok.com/@peptidebymj?_r=1&_t=ZS-934EOKIDojl', icon: '🎵', variant: 'secondary' }
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="app-container">
       {/* Background Decor - Simplified */}
@@ -84,7 +55,7 @@ const Home = () => {
 
       {/* Links Section */}
       <main className="links-container">
-        {links.map((link, index) => {
+        {LINKS.map((link, index) => {
           if (link.variant === 'header') {
             return (
               <h2
